@@ -1,70 +1,35 @@
-# MeetingFlow - 会議内容まとめアプリ
+# MeetingFlow
 
-会議の記録・管理・AI要約を一元管理するWebアプリです。
+## 概要
+会議の記録・管理・AI要約を一元管理するWebアプリです。音声入力で会議内容をリアルタイムに文字起こしし、Groq APIで議題・決定事項・アクションアイテムを自動要約します。データはブラウザ内に保存され、サーバー不要でプライバシーを保ちながら利用できます。
 
-## 機能
+## 主な機能
+- 会議グループ管理: 会議の種類ごとにグループを作成・色分けして整理
+- 音声入力: Web Speech APIによるリアルタイム文字起こし（日本語対応）
+- AI要約: Groq API（Llama 3.3 70B）で議題・サマリー・決定事項・アクションアイテムを自動生成
+- 時系列タイムライン: 会議記録をページネーションで閲覧・詳細表示
+- 全文検索: タイトル・本文・要約・参加者からキーワード検索
+- データ管理: JSONエクスポート/インポートによるバックアップ（上書き・マージ選択可）
+- ダークモード: システム設定追従または手動で切替
+- レスポンシブデザイン: PC・スマホ両対応のUI
 
-- **会議グループ管理**: 会議の種類ごとにグループを作成・整理
-- **音声入力**: Web Speech APIによるリアルタイム文字起こし（日本語対応）
-- **AI要約**: Groq API（Llama 3.3 70B）による自動要約
-  - 主な議題
-  - 各議題のサマリー
-  - 決定事項
-  - アクションアイテム
-- **時系列ビュー**: 会議記録を時系列で閲覧
-- **全文検索**: タイトル・本文・要約からキーワード検索
-- **データ管理**: JSONエクスポート/インポートによるバックアップ
-- **ダークモード**: システム設定に追従 + 手動切替
-- **レスポンシブデザイン**: PC・スマホ対応
+## 使い方
+1. サイドバーから「新しいグループ」で会議グループを作成
+2. グループを選択し、「新しい会議」ボタンをクリック
+3. タイトル・日時・参加者を入力し、会議内容を記録（音声入力またはテキスト入力）
+4. 「要約を生成」ボタンでAI要約を作成（要Groq APIキー）
+5. 「保存」をクリックして記録を保存
+6. タイムラインから過去の会議を閲覧・編集・削除
+7. 設定画面からGroq APIキーの設定やデータのエクスポート/インポートが可能
 
 ## 技術スタック
+- **フレームワーク**: Vite 8 + React 19
+- **言語**: TypeScript
+- **スタイリング**: Tailwind CSS 4
+- **データベース**: IndexedDB (Dexie.js)
+- **AI**: Groq API (Llama 3.3 70B)
+- **音声認識**: Web Speech API
+- **ホスティング**: Cloudflare Pages
 
-- React + TypeScript + Vite
-- Tailwind CSS v3
-- IndexedDB（Dexie.js）
-- Groq API（llama-3.3-70b-versatile）
-- Web Speech API
-
-## ローカル開発
-
-```bash
-# 依存関係のインストール
-npm install
-
-# 開発サーバーの起動
-npm run dev
-
-# ビルド
-npm run build
-
-# プレビュー
-npm run preview
-```
-
-## Groq APIキーの設定
-
-1. [Groq Console](https://console.groq.com/keys) でAPIキーを取得
-2. アプリの設定画面（歯車アイコン）からAPIキーを入力
-3. APIキーはブラウザのlocalStorageに保存されます
-
-## デプロイ手順（Cloudflare Pages）
-
-1. GitHubにリポジトリを作成してpush
-2. [Cloudflare Dashboard](https://dash.cloudflare.com/) にログイン
-3. Workers & Pages → Create → Pages → Connect to Git
-4. リポジトリを選択し、以下を設定：
-   - Framework preset: Vite
-   - Build command: `npm run build`
-   - Build output directory: `dist`
-5. Save and Deploy
-
-## 注意事項
-
-- データはブラウザのIndexedDBに保存されます
-- プライベートブラウジングモードではデータは永続化されません
-- 定期的なバックアップ（JSONエクスポート）をお勧めします
-- 音声入力はChrome/Edgeで動作します（他ブラウザでは自動的にテキスト入力にフォールバック）
-
-## ライセンス
-
-MIT
+## URL
+https://meeting-flow.pages.dev/
