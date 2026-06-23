@@ -7,8 +7,37 @@ test.describe('MeetingFlow Basic Tests', () => {
 
   test('should load the app and show welcome screen', async ({ page }) => {
     await expect(page).toHaveTitle('MeetingFlow - 会議内容まとめ');
-    await expect(page.getByRole('banner').getByRole('heading', { name: 'MeetingFlow' })).toBeVisible();
+    await expect(page.getByRole('banner').getByText('MeetingFlow')).toBeVisible();
     await expect(page.getByText('会議の記録・管理・AI要約を一元管理')).toBeVisible();
+  });
+
+  test('should navigate to home when clicking logo', async ({ page }) => {
+    const sidebar = page.locator('aside.hidden.lg\\:block');
+
+    // First create a group and select it
+    await sidebar.locator('button[aria-label="グループを追加"]').click();
+    await sidebar.locator('input[placeholder="グループ名"]').fill('ロゴテスト');
+    await page.getByRole('button', { name: '追加', exact: true }).click();
+
+    // Wait for group to be auto-selected (timeline view should show)
+    await expect(page.locator('h2').filter({ hasText: 'ロゴテスト' })).toBeVisible();
+
+    // Click the logo to go back to home
+    await page.getByRole('banner').getByText('MeetingFlow').click();
+
+    // Verify we're back to the welcome screen (group selection prompt)
+    await expect(page.getByText('グループを選択')).toBeVisible();
+  });
+
+  test('should open add group form when clicking create group button on welcome screen', async ({ page }) => {
+    const sidebar = page.locator('aside.hidden.lg\\:block');
+
+    // Click the "グループを作成" button on welcome screen
+    await page.getByRole('button', { name: 'グループを作成' }).click();
+
+    // Verify the add group form is shown in the sidebar
+    await expect(sidebar.locator('input[placeholder="グループ名"]')).toBeVisible();
+    await expect(sidebar.locator('input[placeholder="説明（任意）"]')).toBeVisible();
   });
 
   test('should show "create group" prompt when no groups exist', async ({ page }) => {
@@ -23,14 +52,14 @@ test.describe('MeetingFlow Basic Tests', () => {
     await sidebar.locator('button[aria-label="グループを追加"]').click();
 
     // Fill in group details
-    await page.locator('input[placeholder="グループ名"]').fill('テスト定例MTG');
-    await page.locator('input[placeholder="説明（任意）"]').fill('テスト用のグループです');
+    await sidebar.locator('input[placeholder="グループ名"]').fill('テスト定例MTG');
+    await sidebar.locator('input[placeholder="説明（任意）"]').fill('テスト用のグループです');
 
     // Click add button (exact match)
     await page.getByRole('button', { name: '追加', exact: true }).click();
 
-    // Verify group was created
-    await expect(page.getByText('テスト定例MTG')).toBeVisible();
+    // Verify group was created (shown in sidebar)
+    await expect(sidebar.getByText('テスト定例MTG')).toBeVisible();
   });
 
   test('should open settings modal', async ({ page }) => {

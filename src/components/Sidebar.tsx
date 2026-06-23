@@ -12,6 +12,8 @@ interface SidebarProps {
   onAddGroup: (group: Omit<MeetingGroup, 'id' | 'createdAt'>) => Promise<number>;
   onUpdateGroup: (id: number, updates: Partial<MeetingGroup>) => Promise<void>;
   onDeleteGroup: (id: number) => Promise<void>;
+  showAddForm?: boolean;
+  onAddFormShown?: () => void;
 }
 
 interface GroupStats {
@@ -39,6 +41,8 @@ export function Sidebar({
   onAddGroup,
   onUpdateGroup,
   onDeleteGroup,
+  showAddForm,
+  onAddFormShown,
 }: SidebarProps) {
   const [isAdding, setIsAdding] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
@@ -68,6 +72,14 @@ export function Sidebar({
     };
     loadStats();
   }, [groups]);
+
+  useEffect(() => {
+    if (showAddForm && !isAdding) {
+      setIsAdding(true);
+      setNewGroupColor(COLORS[Math.floor(Math.random() * COLORS.length)]);
+      onAddFormShown?.();
+    }
+  }, [showAddForm, isAdding, onAddFormShown]);
 
   const handleAddGroup = async () => {
     if (!newGroupName.trim()) return;

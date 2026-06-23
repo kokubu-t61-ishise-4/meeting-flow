@@ -13,6 +13,8 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
+  const [showAddGroupForm, setShowAddGroupForm] = useState(false);
+  const [hasManuallyDeselected, setHasManuallyDeselected] = useState(false);
 
   const { themeMode, setTheme } = useTheme();
   const { groups, loading: groupsLoading, addGroup, updateGroup, deleteGroup } = useMeetingGroups();
@@ -21,18 +23,31 @@ function App() {
   const selectedGroup = groups.find((g) => g.id === selectedGroupId);
 
   useEffect(() => {
-    if (!groupsLoading && groups.length > 0 && selectedGroupId === null) {
+    if (!groupsLoading && groups.length > 0 && selectedGroupId === null && !hasManuallyDeselected) {
       setSelectedGroupId(groups[0].id!);
     }
-  }, [groups, groupsLoading, selectedGroupId]);
+  }, [groups, groupsLoading, selectedGroupId, hasManuallyDeselected]);
 
   const handleSelectGroup = (id: number | null) => {
     setSelectedGroupId(id);
     setSidebarOpen(false);
+    if (id !== null) {
+      setHasManuallyDeselected(false);
+    }
   };
 
   const handleMeetingSelect = (meeting: SearchResult) => {
     setSelectedGroupId(meeting.groupId);
+  };
+
+  const handleLogoClick = () => {
+    setSelectedGroupId(null);
+    setHasManuallyDeselected(true);
+  };
+
+  const handleCreateGroup = () => {
+    setSidebarOpen(true);
+    setShowAddGroupForm(true);
   };
 
   const handleDeleteGroup = async (id: number) => {
@@ -58,6 +73,7 @@ function App() {
       <Header
         onMenuClick={() => setSidebarOpen(true)}
         onSettingsClick={() => setSettingsOpen(true)}
+        onLogoClick={handleLogoClick}
         themeMode={themeMode}
         onThemeChange={setTheme}
         onMeetingSelect={handleMeetingSelect}
@@ -73,6 +89,8 @@ function App() {
           onAddGroup={addGroup}
           onUpdateGroup={updateGroup}
           onDeleteGroup={handleDeleteGroup}
+          showAddForm={showAddGroupForm}
+          onAddFormShown={() => setShowAddGroupForm(false)}
         />
 
         <main className="flex-1 flex flex-col min-w-0">
@@ -89,6 +107,7 @@ function App() {
             <WelcomeScreen
               hasGroups={groups.length > 0}
               onOpenSidebar={() => setSidebarOpen(true)}
+              onCreateGroup={handleCreateGroup}
             />
           )}
         </main>

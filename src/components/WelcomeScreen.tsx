@@ -3,9 +3,10 @@ import { Folder, FileText, Mic, Sparkles } from 'lucide-react';
 interface WelcomeScreenProps {
   hasGroups: boolean;
   onOpenSidebar: () => void;
+  onCreateGroup: () => void;
 }
 
-export function WelcomeScreen({ hasGroups, onOpenSidebar }: WelcomeScreenProps) {
+export function WelcomeScreen({ hasGroups, onOpenSidebar, onCreateGroup }: WelcomeScreenProps) {
   return (
     <div className="flex-1 flex items-center justify-center p-8">
       <div className="text-center max-w-md">
@@ -22,7 +23,7 @@ export function WelcomeScreen({ hasGroups, onOpenSidebar }: WelcomeScreenProps) 
             <p className="text-gray-500 dark:text-gray-400 mb-4">
               まずは会議グループを作成してください。
             </p>
-            <button onClick={onOpenSidebar} className="btn btn-primary w-full">
+            <button onClick={onCreateGroup} className="btn btn-primary w-full">
               グループを作成
             </button>
           </div>

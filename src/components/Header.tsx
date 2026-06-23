@@ -5,6 +5,7 @@ import { useSearch, type SearchResult } from '../hooks/useSearch';
 interface HeaderProps {
   onMenuClick: () => void;
   onSettingsClick: () => void;
+  onLogoClick: () => void;
   themeMode: 'system' | 'light' | 'dark';
   onThemeChange: (mode: 'system' | 'light' | 'dark') => void;
   onMeetingSelect: (meeting: SearchResult) => void;
@@ -13,6 +14,7 @@ interface HeaderProps {
 export function Header({
   onMenuClick,
   onSettingsClick,
+  onLogoClick,
   themeMode,
   onThemeChange,
   onMeetingSelect,
@@ -62,9 +64,12 @@ export function Header({
           >
             <Menu className="w-5 h-5" />
           </button>
-          <h1 className="text-xl font-bold text-blue-600 dark:text-blue-400">
+          <button
+            onClick={onLogoClick}
+            className="text-xl font-bold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+          >
             MeetingFlow
-          </h1>
+          </button>
         </div>
 
         <div className="flex items-center gap-2">
